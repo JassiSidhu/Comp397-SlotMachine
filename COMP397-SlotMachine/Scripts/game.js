@@ -12,6 +12,37 @@ var manifest = [
     { id: "background", src: "assets/images/slot-machine.png" },
     { id: "clicked", src: "assets/audio/clicked.wav" }
 ];
+var atlas = {
+    "images": ["assets/images/atlas.png"],
+    "frames": [
+        [1, 3, 64, 64],
+        [67, 3, 64, 64],
+        [133, 3, 64, 64],
+        [199, 3, 64, 64],
+        [264, 3, 64, 64],
+        [330, 3, 64, 64],
+        [394, 3, 64, 64],
+        [3, 69, 49, 49],
+        [53, 69, 49, 49],
+        [103, 69, 49, 49],
+        [153, 69, 49, 49],
+        [203, 69, 49, 49]
+    ],
+    "animations": {
+        "appleSymbol": [0],
+        "barSymbol": [1],
+        "ringSymbol": [2],
+        "cherrySymbol": [3],
+        "diamondSymbol": [4],
+        "lemonSymbol": [5],
+        "watermelonSymbol": [6],
+        "betMaxButton": [7],
+        "betOneButton": [8],
+        "resetButton": [9],
+        "spinButton": [10],
+        "simpleButton": [11]
+    }
+};
 // Game Variables
 var background;
 // Preloader Function
