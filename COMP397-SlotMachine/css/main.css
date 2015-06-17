@@ -1,4 +1,7 @@
 ﻿body {
+    
+    background-image : url("..//assets/images//wallpaper.jpg");
+    background-size:cover;
 }
 
 canvas {
