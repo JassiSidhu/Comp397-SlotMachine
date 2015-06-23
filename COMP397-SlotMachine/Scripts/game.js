@@ -1,3 +1,10 @@
+//  Source File Name: COMP397 - SlotMachine
+//  Author: Jaswinder Sidhu 
+//  Description: A web application of Slot Machine which involves betting some amount
+//  and spinning  the reels for win or lose condition  
+//  Last Modified By: Jaswinder Sidhu  
+//  Date last modified: June 22, 2015 
+//  Revised: 5 times   
 /// <reference path="typings/stats/stats.d.ts" />
 /// <reference path="typings/easeljs/easeljs.d.ts" />
 /// <reference path="typings/tweenjs/tweenjs.d.ts" />
@@ -25,19 +32,17 @@ var atlas = {
         [0, 0, 49, 49],
         [50, 0, 49, 49],
         [101, 0, 49, 49],
-        [151, 0, 49, 49],
-        [201, 0, 49, 49],
-        [251, 0, 50, 50],
-        [303, 0, 50, 50]
+        [153, 0, 48, 49],
+        [202, 0, 50, 50],
+        [254, 0, 50, 50],
     ],
     "animations": {
         "betMaxButton": [0],
         "betOneButton": [1],
         "betTenButton": [2],
-        "resetButton1": [3],
-        "spinButton": [4],
-        "powerButton": [5],
-        "resetButton": [6]
+        "spinButton": [3],
+        "powerButton": [4],
+        "resetButton": [5]
     }
 };
 // Game Variables
@@ -52,8 +57,9 @@ var resetButton;
 var powerButton;
 var jackpotLabel;
 var playerCreditLabel;
-var playerBetText;
+var playerBetLabel;
 var spinResultLabel;
+var resultLabel;
 // GAME VARIABLES
 var playerMoney = 1000;
 var winnings = 0;
@@ -67,6 +73,8 @@ var fruits = "";
 var winRatio = 0;
 // Tally Variables 
 var apple = 0;
+var grapes = 0;
+var horseshoe = 0;
 var bar = 0;
 var bell = 0;
 var cherry = 0;
@@ -100,10 +108,10 @@ function init() {
 function setupStats() {
     stats = new Stats();
     stats.setMode(0); // set to fps
-    // align bottom-right
+    // alignment
     stats.domElement.style.position = 'absolute';
-    stats.domElement.style.left = '330px';
-    stats.domElement.style.top = '10px';
+    stats.domElement.style.left = '840px';
+    stats.domElement.style.top = '120px';
     document.body.appendChild(stats.domElement);
 }
 // function to show Player Stats 
@@ -111,17 +119,13 @@ function showPlayerStats() {
     winRatio = winNumber / turn;
     jackpotLabel.text = jackpot.toString();
     playerCreditLabel.text = playerMoney.toString();
-    playerBetText.text = playerBet.toString();
-    /* $("#jackpot").text("Jackpot: " + jackpot);
-    $("#playerMoney").text("Player Money: " + playerMoney);
-    $("#playerTurn").text("Turn: " + turn);
-    $("#playerWins").text("Wins: " + winNumber);
-    $("#playerLosses").text("Losses: " + lossNumber);
-    $("#playerWinRatio").text("Win Ratio: " + (winRatio * 100).toFixed(2) + "%");*/
+    playerBetLabel.text = playerBet.toString();
 }
 // function to reset all fruit tallies 
 function resetFruitTally() {
     apple = 0;
+    grapes = 0;
+    horseshoe = 0;
     bar = 0;
     bell = 0;
     cherry = 0;
@@ -132,6 +136,7 @@ function resetFruitTally() {
 }
 // function to reset the player stats 
 function resetAll() {
+    spinButton.mouseEnabled = true;
     playerMoney = 1000;
     winnings = 0;
     jackpot = 5000;
@@ -172,6 +177,7 @@ function checkRange(value, lowerBounds, upperBounds) {
 function showWinMessage() {
     playerMoney += winnings;
     spinResultLabel.text = winnings.toString();
+    resultLabel.text = "You Win";
     resetFruitTally();
     checkJackPot();
 }
@@ -179,6 +185,7 @@ function showWinMessage() {
 function showLossMessage() {
     playerMoney -= playerBet;
     spinResultLabel.text = "-" + playerBet.toString();
+    resultLabel.text = "You Lose";
     resetFruitTally();
 }
 // When this function is called it determines the betLine results.
@@ -193,13 +200,21 @@ function Reels() {
                 betLine[spin] = "blank";
                 blank++;
                 break;
+            case checkRange(outCome[spin], 1, 32):
+                betLine[spin] = "grapes";
+                grapes++;
+                break;
             case checkRange(outCome[spin], 28, 37):
                 betLine[spin] = "apple";
                 apple++;
                 break;
-            case checkRange(outCome[spin], 38, 46):
+            case checkRange(outCome[spin], 38, 40):
                 betLine[spin] = "bar";
                 bar++;
+                break;
+            case checkRange(outCome[spin], 38, 46):
+                betLine[spin] = "horseshoe";
+                horseshoe++;
                 break;
             case checkRange(outCome[spin], 47, 54):
                 betLine[spin] = "bell";
@@ -225,11 +240,14 @@ function Reels() {
     }
     return betLine;
 }
-/* This function calculates the player's winnings, if any */
+// This function calculates the player's winnings, if any 
 function determineWinnings() {
     if (blank == 0) {
         if (apple == 3) {
             winnings = playerBet * 10;
+        }
+        else if (grapes == 3) {
+            winnings = playerBet * 15;
         }
         else if (bar == 3) {
             winnings = playerBet * 20;
@@ -246,26 +264,35 @@ function determineWinnings() {
         else if (watermelon == 3) {
             winnings = playerBet * 75;
         }
+        else if (horseshoe == 3) {
+            winnings = playerBet * 80;
+        }
         else if (bell == 3) {
             winnings = playerBet * 100;
         }
         else if (apple == 2) {
             winnings = playerBet * 2;
         }
-        else if (bar == 2) {
-            winnings = playerBet * 2;
-        }
-        else if (orange == 2) {
+        else if (grapes == 2) {
             winnings = playerBet * 3;
         }
-        else if (cherry == 2) {
+        else if (bar == 2) {
             winnings = playerBet * 4;
         }
-        else if (diamond == 2) {
+        else if (orange == 2) {
             winnings = playerBet * 5;
+        }
+        else if (cherry == 2) {
+            winnings = playerBet * 6;
+        }
+        else if (diamond == 2) {
+            winnings = playerBet * 7;
         }
         else if (watermelon == 2) {
             winnings = playerBet * 10;
+        }
+        else if (horseshoe == 2) {
+            winnings = playerBet * 15;
         }
         else if (bell == 2) {
             winnings = playerBet * 20;
@@ -285,41 +312,48 @@ function determineWinnings() {
     }
 }
 // Callback function that allows me to respond to button click events
+//button click to quit the game
 function powerButtonClicked() {
-    createjs.Sound.play("clicked");
+    alert("Thank you for playing the game");
+    window.close();
 }
+//button click to reset the game
 function resetButtonClicked() {
-    createjs.Sound.play("clicked");
     resetAll();
     showPlayerStats();
 }
+//button click to place $1 bet
 function betOneButtonClicked() {
-    createjs.Sound.play("clicked");
-    playerBetText.text = "1";
+    playerBetLabel.text = "1";
 }
+//button click to place $10 bet
 function betTenButtonClicked() {
-    createjs.Sound.play("clicked");
-    playerBetText.text = "10";
+    playerBetLabel.text = "10";
 }
+//button click to bet all the player credit
 function betMaxButtonClicked() {
-    createjs.Sound.play("clicked");
-    playerBetText.text = playerMoney.toString();
+    playerBetLabel.text = playerMoney.toString();
 }
+//button click to spin the reels
 function spinButtonClicked(event) {
-    playerBet = parseInt(playerBetText.text);
+    playerBet = parseInt(playerBetLabel.text);
     if (playerMoney == 0) {
+        spinButton.mouseEnabled = false;
         if (confirm("You ran out of Money! \nDo you want to play again?")) {
             resetAll();
             showPlayerStats();
         }
     }
     else if (playerBet > playerMoney) {
+        spinButton.mouseEnabled = false;
         alert("You don't have enough Money to place that bet.");
     }
     else if (playerBet < 0) {
+        spinButton.mouseEnabled = false;
         alert("All bets must be a positive $ amount.");
     }
     else if (playerBet <= playerMoney) {
+        spinButton.mouseEnabled = true;
         spinResult = Reels();
         fruits = spinResult[0] + " - " + spinResult[1] + " - " + spinResult[2];
         // Iterate over the number of reels
@@ -339,22 +373,23 @@ function spinButtonClicked(event) {
 }
 // Function to add slot machine graphics
 function createUI() {
-    // Add the background to the game container
+    // Add the background(slot machine image) to the game container
     background = new createjs.Bitmap(assets.getResult("background"));
     game.addChild(background);
     //Add Jackpot label to game container
     jackpotLabel = new objects.Label(jackpot.toString(), 130, 101, false);
     game.addChild(jackpotLabel);
-    //Add labels to game containetr
+    //Add player credit and spin result labels to game containetr
     playerCreditLabel = new objects.Label(playerMoney.toString(), 30, 301, false);
     game.addChild(playerCreditLabel);
     spinResultLabel = new objects.Label("0", 228, 301, false);
     game.addChild(spinResultLabel);
+    resultLabel = new objects.Label("Start", 125, 42, false);
+    game.addChild(resultLabel);
     //Add Player bet textbox to game container
-    playerBetText = new createjs.Text(playerBet.toString(), config.FONT_SMALL + " " + config.FONT_FAMILY, config.BLACK);
-    playerBetText.x = 130;
-    playerBetText.y = 301;
-    game.addChild(playerBetText);
+    playerBetLabel = new objects.Label(playerBet.toString(), 130, 301, false);
+    game.addChild(playerBetLabel);
+    //Adding reels to game container
     for (var index = 0; index < NUM_REELS; index++) {
         reelContainers[index] = new createjs.Container();
         game.addChild(reelContainers[index]);

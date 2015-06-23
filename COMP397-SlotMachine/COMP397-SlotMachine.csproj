@@ -64,6 +64,7 @@
     <Content Include="assets\images\bar.png" />
     <Content Include="assets\images\bell.png" />
     <Content Include="assets\images\blank.png" />
+    <Content Include="assets\images\casino.jpg" />
     <Content Include="assets\images\diamond.png" />
     <Content Include="assets\images\grapes.png" />
     <Content Include="assets\images\heart.png" />

@@ -1,7 +1,8 @@
-﻿module objects {
+﻿// module for cutomized label
+module objects {
     export class Label extends createjs.Text {
         constructor(labelText:string, x:number, y:number, centered:boolean) {
-            super(labelText, config.FONT_SMALL + " " + config.FONT_FAMILY, config.BLACK);
+            super(labelText, config.FONT_SMALL + " " + config.FONT_FAMILY, config.BLUE);
 
             if (centered) {
                 this.regX = this.getMeasuredWidth() * 0.5;

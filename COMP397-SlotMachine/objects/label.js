@@ -4,12 +4,13 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
+// module for cutomized label
 var objects;
 (function (objects) {
     var Label = (function (_super) {
         __extends(Label, _super);
         function Label(labelText, x, y, centered) {
-            _super.call(this, labelText, config.FONT_SMALL + " " + config.FONT_FAMILY, config.BLACK);
+            _super.call(this, labelText, config.FONT_SMALL + " " + config.FONT_FAMILY, config.BLUE);
             if (centered) {
                 this.regX = this.getMeasuredWidth() * 0.5;
                 this.regY = this.getMeasuredHeight() * 0.5;
